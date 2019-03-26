@@ -1,0 +1,19 @@
+{
+  "SERVER": {
+
+
+            },
+
+  "CLIENT":{
+      "ClassificationModel": {
+        "model_cfg_path": "",
+        "batch_size": "",
+        "learning_rate": 0.0001,
+        "weights_path": ""
+
+      }
+
+  }
+
+
+}
