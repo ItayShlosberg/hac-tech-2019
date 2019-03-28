@@ -34,7 +34,7 @@ class FerroDataset(Dataset):
         # Extract labels.
         with open(y_fname) as f:
             file_content = f.readlines()
-            self.labels = torch.Tensor([[int(y) for y in x.strip().split(' ')] for x in file_content])
+            self.labels = torch.tensor([[int(y) for y in x.strip().split(' ')] for x in file_content], dtype=torch.int64).squeeze()
 
 
 

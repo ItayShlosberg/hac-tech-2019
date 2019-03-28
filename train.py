@@ -20,14 +20,15 @@ if __name__ == '__main__':
     print("start train script, device:",device)
 
     # initialize model.
-    model = Detector(input_size=300, hidden_size=2) # 300 = (x,y,z)*100 samples
+    model = Detector(input_size=300, hidden_size=100, target_size=args['Train']['num_classes']) # 300 = (x,y,z)*100 samples
     model.to(device)
     optimizer = optim.SGD(model.parameters(), lr=args['Train']['learning_rate'])
-    loss_function = nn.NLLLoss()
+    loss_func = nn.NLLLoss()
+    running_loss = 0
 
     # initialize dataset and dataloader.
     dataset = FerroDataset(args['Train']['data_path'], args['Train']['labels_path'])
-    dataloader = DataLoader(dataset, batch_size=args['Train']['batch_size'], shuffle=True, sampler=None, num_workers=args['Train']['num_workers'])
+    dataloader = DataLoader(dataset, batch_size=args['Train']['batch_size'], shuffle=False, sampler=None, num_workers=args['Train']['num_workers'])
     print("dataset size: ", len(dataset))
 
     # start process.
@@ -43,13 +44,13 @@ if __name__ == '__main__':
             optimizer.zero_grad()
 
             # forward + backward + optimize
-            outputs, _ = model(inputs)
-            loss = loss(outputs, labels)
+
+            outputs = model(inputs)
+            loss = loss_func(outputs, labels)
+
             loss.backward()
             optimizer.step()
 
-            # print statistics
-            running_loss += loss.item()
             # print statistics
             running_loss += loss.item()
             if idx_batch % 2000 == 1999:  # print every 2000 mini-batches

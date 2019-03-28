@@ -13,14 +13,18 @@ from utils_lib.data_utils import *
 
 
 class Detector(nn.Module):
-    def __init__(self, input_size, hidden_size):
+    def __init__(self, input_size, hidden_size, target_size):
         super(Detector, self).__init__()
         self.hidden_size = hidden_size
         self.lstm = nn.LSTM(input_size, hidden_size)
+        self.hidden2tag = nn.Linear(hidden_size, target_size)
 
     def forward(self, input):
-        output, hidden = self.lstm(input.view(input.shape[0], 1, input.shape[1]))  # self.lstm(input.view(4,1,3))
-        return output, hidden
+        batch_size = input.shape[0]
+        lstm_output, hidden = self.lstm(input.view(batch_size, 1, input.shape[1]))  # self.lstm(input.view(4,1,3))
+        linear_output = self.hidden2tag(lstm_output.view(batch_size, -1))
+        score_output = F.log_softmax(linear_output, dim=1)
+        return score_output
 
 
 
