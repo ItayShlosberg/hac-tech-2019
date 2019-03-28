@@ -1,27 +1,28 @@
-from torch.nn import LSTM
-import torch.nn as nn
+import matplotlib.pyplot as plt
+import numpy as np
 import torch
+import torchvision
+import torchvision.transforms as transforms
+import torch.nn as nn
+import torch.nn.functional as F
+import torch.optim as optim
+import time
 
 
 
+class Detector(nn.Module):
+    def __init__(self, input_size, hidden_size):
+        super(Detector, self).__init__()
+        self.hidden_size = hidden_size
+        self.embedding = nn.Embedding(input_size, hidden_size)
+        self.gru = nn.GRU(hidden_size, hidden_size)
+
+    def forward(self, x):
+        embedded = self.embedding(input).view(1, 1, -1)
+        output = embedded
+        output, hidden = self.gru(output, hidden)
+        return output, hidden
 
 
-
-
-rnn = LSTM(10, 20, 2)
-input = torch.randn(5, 3, 10)
-h0 = torch.randn(2, 3, 20)
-c0 = torch.randn(2, 3, 20)
-output, (hn, cn) = rnn(input, (h0, c0))
-
-
-rnn = nn.LSTMCell(10, 20)
-input = torch.randn(6, 3, 10)
-hx = torch.randn(3, 20)
-cx = torch.randn(3, 20)
-output = []
-for i in range(6):
-    hx, cx = rnn(input[i], (hx, cx))
-    output.append(hx)
-
-print(output[0].shape)
+if __name__ == '__main__':
+    pass
