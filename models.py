@@ -28,3 +28,17 @@ class Detector(nn.Module):
 
 
 
+class DetectorMultiLSTM(nn.Module):
+    def __init__(self, input_size, hidden_size, target_size):
+        super(DetectorMultiLSTM, self).__init__()
+        self.hidden_size = hidden_size
+        self.lstm = nn.LSTM(input_size, hidden_size, num_layers=4)
+        self.hidden2tag = nn.Linear(hidden_size, target_size)
+
+    def forward(self, input):
+        batch_size = input.shape[0]
+        lstm_output, hidden = self.lstm(input.view(batch_size, 1, input.shape[1]))  # self.lstm(input.view(4,1,3))
+        linear_output = self.hidden2tag(lstm_output.view(batch_size, -1))
+        score_output = F.log_softmax(linear_output, dim=1)
+        return score_output
+
