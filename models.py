@@ -29,10 +29,10 @@ class Detector(nn.Module):
 
 
 class DetectorMultiLSTM(nn.Module):
-    def __init__(self, input_size, hidden_size, target_size):
+    def __init__(self, input_size, hidden_size, target_size, num_layers):
         super(DetectorMultiLSTM, self).__init__()
         self.hidden_size = hidden_size
-        self.lstm = nn.LSTM(input_size, hidden_size, num_layers=4)
+        self.lstm = nn.LSTM(input_size, hidden_size, num_layers=num_layers)
         self.hidden2tag = nn.Linear(hidden_size, target_size)
 
     def forward(self, input):

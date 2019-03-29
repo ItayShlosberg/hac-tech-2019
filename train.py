@@ -23,7 +23,7 @@ if __name__ == '__main__':
     print("start train script, device:",device)
 
     # initialize model.
-    model = DetectorMultiLSTM(input_size=300, hidden_size=100, target_size=args['Train']['num_classes']) # 300 = (x,y,z)*100 samples
+    model = DetectorMultiLSTM(input_size=args["Model"]["input_size"], hidden_size=args["Model"]["hidden_size"], target_size=args['Model']['num_classes'])
     model.to(device)
     optimizer = optim.SGD(model.parameters(), lr=args['Train']['learning_rate'])
     loss_func = nn.NLLLoss()

@@ -26,8 +26,14 @@ class FerroDataset(Dataset):
 
         # Extract features.
         ferroObjList =[]
-        files = [join(x_fname, f) for f in listdir(x_fname) if isfile(join(x_fname, f))]
-        for file in files:
+        samples_files = [join(x_fname, f) for f in listdir(x_fname) if isfile(join(x_fname, f))]
+        tags_files = [join(y_fname, f) for f in listdir(y_fname) if isfile(join(y_fname, f))]
+        # sorted(samples_files, key=lambda x,y: x>y)
+        # sorted(tags_files, key=lambda x,y: x>y)
+        samples_files.sort()
+        tags_files.sort()
+
+        for file in samples_files:
             with open(file) as f:
                 file_content = f.readlines()
                 lines = [[float(y) for y in x.strip().split(' ')] for x in file_content]
@@ -38,8 +44,7 @@ class FerroDataset(Dataset):
 
         # Extract labels.
         labels_list = []
-        files = [join(y_fname, f) for f in listdir(y_fname) if isfile(join(y_fname, f))]
-        for file in files:
+        for file in tags_files:
             with open(file) as f:
                 file_content = f.readlines()
                 labels_list += [[int(float(y)) for y in x.strip().split(' ')] for x in file_content]
