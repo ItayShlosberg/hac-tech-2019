@@ -11,6 +11,8 @@ from torch.utils.data.dataset import Dataset
 from torch.utils.data.dataloader import DataLoader
 import itertools
 from . import utils
+from os import listdir
+from os.path import isfile, join
 
 
 def chunks(l, n):
@@ -19,23 +21,30 @@ def chunks(l, n):
         yield l[i:i + n]
 
 class FerroDataset(Dataset):
-    def __init__(self, x_fname, y_fname=None):
+    def __init__(self, x_fname, y_fname):
         super(FerroDataset, self).__init__()
 
         # Extract features.
-        with open(x_fname) as f:
-            file_content = f.readlines()
-            lines = [[float(y) for y in x.strip().split(' ')] for x in file_content]
-            ferroObjList = [list(itertools.chain(*item)) for item in list(chunks(lines,3))]
-            # self.data = torch.Tensor([[int(y) for y in x.strip().split(' ')] for x in content])
-            self.data = torch.Tensor(ferroObjList)
+        ferroObjList =[]
+        files = [join(x_fname, f) for f in listdir(x_fname) if isfile(join(x_fname, f))]
+        for file in files:
+            with open(file) as f:
+                file_content = f.readlines()
+                lines = [[float(y) for y in x.strip().split(' ')] for x in file_content]
+                ferroObjList += [list(itertools.chain(*item)) for item in list(chunks(lines,3))]
+                # self.data = torch.Tensor([[int(y) for y in x.strip().split(' ')] for x in content])
+        self.data = torch.Tensor(ferroObjList)
 
 
         # Extract labels.
-        with open(y_fname) as f:
-            file_content = f.readlines()
-            self.labels = torch.tensor([[int(y) for y in x.strip().split(' ')] for x in file_content], dtype=torch.int64).squeeze()
+        labels_list = []
+        files = [join(y_fname, f) for f in listdir(y_fname) if isfile(join(y_fname, f))]
+        for file in files:
+            with open(file) as f:
+                file_content = f.readlines()
+                labels_list += [[int(float(y)) for y in x.strip().split(' ')] for x in file_content]
 
+        self.labels = torch.tensor(labels_list, dtype=torch.int64).squeeze()
 
 
     def __getitem__(self, item):

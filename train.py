@@ -74,5 +74,5 @@ if __name__ == '__main__':
 
     # save mode.
     save_path = args["Train"]["experiment_dir"]+"/"+args["Train"]["train_name"]+"_model.pt"
-    torch.save(model, save_path)
-    print("model saved: ", save_path)
+    torch.save(model.state_dict(), save_path)
+    print("model weights saved: ", save_path)

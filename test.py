@@ -26,7 +26,11 @@ if __name__ == '__main__':
 
     # load model
     weights_path = args["Test"]["weights_path"]
-    model = torch.load(weights_path)
+
+    model = DetectorMultiLSTM(input_size=300, hidden_size=100, target_size=args['Test']['num_classes'])
+    model.to(device)
+    model.load_state_dict(torch.load(weights_path))
+    model.eval()
     print("model loaded: %s"%weights_path)
 
     # initialize dataset and dataloader.
@@ -49,4 +53,4 @@ if __name__ == '__main__':
 
 
     print("total: time: %.5f " % (time.time() - total_time))
-    print('Accuracy of the network on the test set: %f' % (100 * float(correct) / float(total)))
+    print('Accuracy of the network on the test set: %f ' % (100 * float(correct) / float(total)))
