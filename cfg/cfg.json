@@ -7,13 +7,40 @@
   "CLIENT":{
       "ClassificationModel": {
         "model_cfg_path": "",
-        "batch_size": "",
+        "batch_size": 16,
         "learning_rate": 0.0001,
         "weights_path": ""
 
-      }
+      }},
 
-  }
+    "Model": {
+      "input_size": 300,
+      "hidden_size": 200,
+      "num_layers": 5,
+      "num_classes": 7
+    },
 
+    "Train":
+    {
+      "train_name": "e13",
+      "batch_size": 16,
+      "num_epochs": 30,
+      "learning_rate": 0.01,
+      "weights_path": "",
+      "experiment_dir": "experiments",
+      "data_path": "DataSet/TRAIN/samples",
+      "labels_path": "DataSet/TRAIN/tags",
+      "num_workers": 4,
+      "validation_percent" : 0.05
+    },
+
+    "Test":
+    {
+      "data_path": "DataSet/TRAIN/samples",
+      "labels_path": "DataSet/TRAIN/tags",
+      "weights_path": "experiments/e13_model.pt",
+      "num_workers": 4,
+      "batch_size": 16
+    }
 
 }
